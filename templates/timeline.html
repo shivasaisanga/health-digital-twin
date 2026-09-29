@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Health Timeline{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <p class="section-eyebrow mb-1">Progress over time</p>
+  <h3 class="mb-4">{{ user.name.split(' ')[0] }}'s Health Timeline</h3>
+
+  {% if forecast and forecast.health_score %}
+  <div class="twin-card no-print">
+    <h5>📈 Risk Trend Forecast</h5>
+    <p class="text-muted" style="font-size:0.85rem;">Based on your logged history, projected forward using a simple trend line.
+    {% if forecast.health_score.sequence_fallback %}(Entries were logged close together in time, so this trend is based on check-in sequence rather than real dates — log updates over several days for a date-based forecast.){% endif %}</p>
+    <div class="row g-3">
+      <div class="col-md-6">
+        <p class="fw-semibold mb-1">Health Score ({{ forecast.health_score.trend|title }})</p>
+        <p class="text-muted mb-0" style="font-size:0.85rem;">
+          Currently {{ forecast.health_score.current_value }} &middot;
+          Projected in 90 days: <b>{{ forecast.health_score.projections[90] }}</b>
+        </p>
+      </div>
+      {% if forecast.heart_risk %}
+      <div class="col-md-6">
+        <p class="fw-semibold mb-1">Heart Risk ({{ forecast.heart_risk.trend|title }})</p>
+        <p class="text-muted mb-0" style="font-size:0.85rem;">
+          Currently {{ forecast.heart_risk.current_value }}% &middot;
+          Projected in 90 days: <b>{{ forecast.heart_risk.projections[90] }}%</b>
+        </p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% elif history|length >= 1 %}
+  <div class="twin-card no-print">
+    <p class="text-muted mb-0" style="font-size:0.85rem;">Log at least 3 updates to unlock trend forecasting.</p>
+  </div>
+  {% endif %}
+
+  {% if history|length < 2 %}
+    <div class="twin-card">
+      <p class="mb-0 text-muted">Log at least two health updates to see your timeline trend. <a href="{{ url_for('intake') }}">Log another update</a>.</p>
+    </div>
+  {% else %}
+  <div class="twin-card">
+    <h5>Health Score Trend</h5>
+    <canvas id="trendChart" height="100"></canvas>
+  </div>
+
+  <div class="twin-card">
+    <h5>Disease Risk Trend</h5>
+    <canvas id="riskChart" height="100"></canvas>
+  </div>
+  {% endif %}
+
+  <div class="twin-card">
+    <h5>Log History</h5>
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr><th>Date</th><th>Health Score</th><th>BMI</th><th>BP</th><th>Glucose</th><th>Diabetes</th><th>Hypertension</th><th>Heart</th></tr>
+        </thead>
+        <tbody>
+          {% for r in history|reverse %}
+          <tr>
+            <td>{{ r.recorded_at }}</td>
+            <td>{{ r.health_score }}</td>
+            <td>{{ r.bmi }}</td>
+            <td>{{ r.systolic_bp|int }}/{{ r.diastolic_bp|int }}</td>
+            <td>{{ r.glucose|int }}</td>
+            <td>{{ r.diabetes_risk }}%</td>
+            <td>{{ r.hypertension_risk }}%</td>
+            <td>{{ r.heart_risk }}%</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{% if history|length >= 2 %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+const labels = {{ history|map(attribute='recorded_at')|list|tojson }};
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [{
+      label: 'Health Score',
+      data: {{ history|map(attribute='health_score')|list|tojson }},
+      borderColor: '#1fb6a6',
+      backgroundColor: 'rgba(31,182,166,0.15)',
+      tension: 0.3,
+      fill: true
+    }]
+  },
+  options: { scales: { y: { min: 0, max: 100 } } }
+});
+
+new Chart(document.getElementById('riskChart'), {
+  type: 'line',
+  data: {
+    labels: labels,
+    datasets: [
+      { label: 'Diabetes', data: {{ history|map(attribute='diabetes_risk')|list|tojson }}, borderColor: '#ff6b5c', tension: 0.3 },
+      { label: 'Hypertension', data: {{ history|map(attribute='hypertension_risk')|list|tojson }}, borderColor: '#f2b134', tension: 0.3 },
+      { label: 'Heart Disease', data: {{ history|map(attribute='heart_risk')|list|tojson }}, borderColor: '#0b3d5c', tension: 0.3 }
+    ]
+  },
+  options: { scales: { y: { min: 0, max: 100 } } }
+});
+</script>
+{% endif %}
+{% endblock %}

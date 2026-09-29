@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}{{ patient.name }} — Patient Twin{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <a href="{{ url_for('doctor_dashboard') }}" class="text-decoration-none">&larr; Back to all patients</a>
+
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3 mb-4">
+    <div>
+      <p class="section-eyebrow mb-1">Read-only clinical view</p>
+      <h3 class="mb-0">{{ patient.name }}'s Digital Twin</h3>
+      <p class="text-muted mb-0" style="font-size:0.9rem;">{{ patient.age }} yrs &middot; {{ patient.gender|title }} &middot; {{ patient.email }}</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="twin-card text-center">
+        <h5>Overall Health Score</h5>
+        <div class="score-badge">
+          <span class="val">{{ record.health_score }}</span><span class="max">/100</span>
+        </div>
+        <p class="text-muted mt-2 mb-0" style="font-size:0.9rem;">Updated {{ record.recorded_at }}</p>
+      </div>
+
+      <div class="twin-card">
+        <h5>Health Score Breakdown</h5>
+        <canvas id="radarChart" height="220"></canvas>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="twin-card">
+        <h5>Predicted Chronic Disease Risk</h5>
+        {% for label, key in [('Diabetes','diabetes_risk'), ('Hypertension','hypertension_risk'), ('Heart Disease','heart_risk')] %}
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span>{{ label }}</span>
+          <span class="risk-pill {{ 'risk-high' if record[key] >= 60 else ('risk-mod' if record[key] >= 30 else 'risk-low') }}">{{ record[key] }}%</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="twin-card">
+        <h5>Explainable AI — Key Factors</h5>
+        {% for disease, factors in xai.items() %}
+          <p class="fw-semibold mb-1 text-capitalize" style="font-size:0.9rem;">{{ disease }}</p>
+          {% for f in factors %}
+            {% if f.feature != 'none' %}
+            <div class="mb-2">
+              <div class="d-flex justify-content-between" style="font-size:0.82rem;">
+                <span>{{ f.friendly_name }}</span>
+                <span class="text-muted">{{ f.value }}</span>
+              </div>
+              <div class="xai-bar-track"><div class="xai-bar-fill" style="width:{{ [f.contribution*4, 100]|min }}%"></div></div>
+            </div>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="twin-card">
+        <h5>Habit-Impact Ranking</h5>
+        {% for h in top_changes %}
+        <div class="habit-item">
+          <div><span class="rank">{{ loop.index }}</span>{{ h.change }}</div>
+          <div class="gain">−{{ h.risk_reduction_pct }} pts</div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="twin-card">
+        <h5>Recorded Metrics</h5>
+        <table class="table table-sm mb-0">
+          <tbody>
+            <tr><td>BMI</td><td>{{ record.bmi }}</td></tr>
+            <tr><td>Blood Pressure</td><td>{{ record.systolic_bp|int }}/{{ record.diastolic_bp|int }}</td></tr>
+            <tr><td>Glucose</td><td>{{ record.glucose|int }} mg/dL</td></tr>
+            <tr><td>Sleep</td><td>{{ record.sleep_hours }} hrs/night</td></tr>
+            <tr><td>Activity</td><td>{{ record.activity_min_per_week|int }} min/week</td></tr>
+            <tr><td>Smoking</td><td>{{ 'Yes' if record.smoking else 'No' }}</td></tr>
+            <tr><td>Family History</td><td>{{ 'Yes' if record.family_history else 'No' }}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="twin-card mt-2">
+    <h5>Personalized Recommendations</h5>
+    <ul class="mb-0">
+      {% for tip in tips %}
+        <li class="mb-2">{{ tip }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+new Chart(document.getElementById('radarChart').getContext('2d'), {
+  type: 'radar',
+  data: {
+    labels: ['Metabolic', 'Cardiovascular', 'Sleep', 'Activity'],
+    datasets: [{
+      label: 'Sub-Score',
+      data: [{{ record.metabolic_score }}, {{ record.cardio_score }}, {{ record.sleep_score }}, {{ record.activity_score }}],
+      backgroundColor: 'rgba(31,182,166,0.25)',
+      borderColor: '#1fb6a6',
+      pointBackgroundColor: '#0b3d5c'
+    }]
+  },
+  options: { scales: { r: { min: 0, max: 100, ticks: { stepSize: 20 } } }, plugins: { legend: { display: false } } }
+});
+</script>
+{% endblock %}

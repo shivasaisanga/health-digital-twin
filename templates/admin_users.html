@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Registered Users{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <p class="section-eyebrow mb-1">Admin view</p>
+  <h3 class="mb-4">Registered Users</h3>
+
+  <div class="twin-card">
+    {% if users|length == 0 %}
+      <p class="text-muted mb-0">No users have registered yet.</p>
+    {% else %}
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Age</th>
+            <th>Gender</th>
+            <th>Role</th>
+            <th>Verified</th>
+            <th>Registered At</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.age }}</td>
+            <td>{{ u.gender|title }}</td>
+            <td><span class="risk-pill risk-low">{{ u.role|title }}</span></td>
+            <td>
+              {% if u.is_verified %}
+                <span class="risk-pill risk-low">Verified</span>
+              {% else %}
+                <span class="risk-pill risk-mod">Pending</span>
+              {% endif %}
+            </td>
+            <td>{{ u.created_at }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

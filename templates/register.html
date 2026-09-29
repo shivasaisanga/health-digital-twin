@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Create your Digital Twin{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="auth-card">
+    <p class="section-eyebrow mb-2">Step 1 of 2</p>
+    <h3 class="mb-4">Create your account</h3>
+    <form method="POST">
+      <div class="mb-3">
+        <label class="form-label">Full name</label>
+        <input type="text" class="form-control" name="name" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" minlength="6" required>
+      </div>
+      <div class="row">
+        <div class="col-6 mb-3">
+          <label class="form-label">Age</label>
+          <input type="number" class="form-control" name="age" min="1" max="120" required>
+        </div>
+        <div class="col-6 mb-3">
+          <label class="form-label">Gender</label>
+          <select class="form-select" name="gender" required>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Register as</label>
+        <select class="form-select" name="role" id="roleSelect">
+          <option value="patient" selected>Patient</option>
+          <option value="doctor">Doctor</option>
+        </select>
+      </div>
+
+      <div class="mb-3 d-none" id="accessCodeField">
+        <label class="form-label">Doctor Access Code</label>
+        <input type="text" class="form-control" name="access_code" placeholder="Provided by your project admin">
+        <div class="form-text">Ask your project guide/admin for this code.</div>
+      </div>
+
+      <button type="submit" class="btn btn-twin w-100 mt-2">Create account</button>
+    </form>
+    <p class="text-center mt-3 mb-0 text-muted">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+  </div>
+</div>
+
+<script>
+  const roleSelect = document.getElementById('roleSelect');
+  const accessCodeField = document.getElementById('accessCodeField');
+  roleSelect.addEventListener('change', () => {
+    accessCodeField.classList.toggle('d-none', roleSelect.value !== 'doctor');
+  });
+</script>
+{% endblock %}

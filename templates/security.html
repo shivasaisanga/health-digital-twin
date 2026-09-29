@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Account Security{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <p class="section-eyebrow mb-1">Account</p>
+  <h3 class="mb-4">Security &amp; Login Activity</h3>
+
+  <div class="twin-card">
+    <h5>Recent Logins</h5>
+    {% if logins|length == 0 %}
+      <p class="text-muted mb-0">No login activity recorded yet.</p>
+    {% else %}
+    <table class="table mb-0">
+      <thead><tr><th>Method</th><th>Time</th></tr></thead>
+      <tbody>
+        {% for l in logins %}
+        <tr>
+          <td><span class="risk-pill risk-low">{{ l.method|title }}</span></td>
+          <td>{{ l.logged_in_at }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+
+  <div class="twin-card">
+    <h5>Data &amp; Privacy</h5>
+    <p class="text-muted">Manage your personal data.</p>
+    <div class="d-flex gap-2 flex-wrap">
+      <a href="{{ url_for('export_csv') }}" class="btn btn-twin-outline" style="color:var(--twin-navy); border-color:var(--twin-navy);">Download My Data (CSV)</a>
+      <a href="{{ url_for('privacy') }}" class="btn btn-twin-outline" style="color:var(--twin-navy); border-color:var(--twin-navy);">Privacy &amp; Delete Account</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

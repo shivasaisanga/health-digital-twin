@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Log in{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="auth-card">
+    <p class="section-eyebrow mb-2">Welcome back</p>
+    <h3 class="mb-4">Log in to your Twin</h3>
+    <form method="POST">
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" class="form-control" name="email" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" class="form-control" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-twin w-100 mt-2">Log in</button>
+    </form>
+    <p class="text-center mt-3 mb-0">
+      <a href="{{ url_for('login_otp_request') }}">Log in with OTP instead</a>
+    </p>
+    <p class="text-center mt-2 mb-0">
+      <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+    </p>
+    <p class="text-center mt-2 mb-0 text-muted">New here? <a href="{{ url_for('register') }}">Create your Digital Twin</a></p>
+  </div>
+</div>
+{% endblock %}

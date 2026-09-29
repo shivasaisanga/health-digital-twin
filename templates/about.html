@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}About the Developer{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="twin-card text-center">
+        <img src="{{ url_for('static', filename='img/developer.webp') }}" alt="Developer photo"
+             class="rounded-circle mb-3" style="width:160px; height:160px; object-fit:cover; border:4px solid var(--twin-teal-soft);">
+        <h3 class="mb-1">Sanga Shiva Sai</h3>
+        <p class="text-muted mb-3">MCA Final Year &middot; Anurag University</p>
+
+        <p class="mb-4" style="max-width:480px; margin:0 auto;">
+          Passionate about data science and software development. Built this AI Personalized
+          Health Digital Twin as an academic project exploring predictive healthcare,
+          explainable AI, and full-stack development.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+          <a href="https://github.com/shivasaisanga" target="_blank" rel="noopener" class="btn btn-twin-outline" style="color:var(--twin-navy); border-color:var(--twin-navy);">GitHub</a>
+          <a href="https://www.linkedin.com/in/shiva-sai-b15a2b253" target="_blank" rel="noopener" class="btn btn-twin-outline" style="color:var(--twin-navy); border-color:var(--twin-navy);">LinkedIn</a>
+          <a href="https://www.instagram.com/shiva_sai_sanga" target="_blank" rel="noopener" class="btn btn-twin-outline" style="color:var(--twin-navy); border-color:var(--twin-navy);">Instagram</a>
+        </div>
+      </div>
+
+      <div class="twin-card">
+        <h5>About This Project</h5>
+        <p class="mb-0 text-muted">
+          The AI Personalized Health Digital Twin with Predictive Risk Intelligence is an
+          academic project that creates a virtual health model for each user, predicts
+          chronic disease risk using Machine Learning, and explains predictions through
+          Explainable AI — with a signature Habit-Impact Ranking Engine that identifies the
+          single most effective lifestyle change for each user.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

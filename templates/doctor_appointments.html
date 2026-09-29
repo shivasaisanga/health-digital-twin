@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Manage Appointments{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <p class="section-eyebrow mb-1">Doctor view</p>
+  <h3 class="mb-4">Appointment Requests</h3>
+
+  <div class="twin-card">
+    {% if appointments|length == 0 %}
+      <p class="text-muted mb-0">No appointment requests yet.</p>
+    {% else %}
+    <table class="table align-middle mb-0">
+      <thead><tr><th>Patient</th><th>Requested Time</th><th>Notes</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+        {% for a in appointments %}
+        <tr>
+          <td>{{ a.patient_name }}</td>
+          <td>{{ a.requested_time }}</td>
+          <td style="max-width:220px;">{{ a.notes or '—' }}</td>
+          <td>
+            <span class="risk-pill {{ 'risk-low' if a.status == 'confirmed' else ('risk-high' if a.status == 'declined' else 'risk-mod') }}">
+              {{ a.status|title }}
+            </span>
+          </td>
+          <td>
+            {% if a.status == 'pending' %}
+            <form method="POST" class="d-flex gap-2">
+              <input type="hidden" name="appointment_id" value="{{ a.id }}">
+              <button type="submit" name="status" value="confirmed" class="btn btn-sm btn-twin">Confirm</button>
+              <button type="submit" name="status" value="declined" class="btn btn-sm btn-twin-outline" style="color:var(--twin-navy); border-color:var(--twin-navy);">Decline</button>
+            </form>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

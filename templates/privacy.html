@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Privacy &amp; Data{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <p class="section-eyebrow mb-1">Your data, your control</p>
+  <h3 class="mb-4">Privacy &amp; Consent</h3>
+
+  <div class="twin-card">
+    <h5>What we store</h5>
+    <p class="text-muted mb-0">
+      We store your account details (name, email, age, gender) and the health metrics you
+      log (BMI, blood pressure, glucose, sleep, activity, etc.) solely to generate your
+      Digital Twin predictions and let you track progress over time. This is an academic
+      demo project — data is stored locally in this app's database and is not shared with
+      any third party.
+    </p>
+  </div>
+
+  <div class="twin-card">
+    <h5>Download your data</h5>
+    <p class="text-muted">Export your full health history as a CSV file at any time.</p>
+    <a href="{{ url_for('export_csv') }}" class="btn btn-twin-outline" style="color:var(--twin-navy); border-color:var(--twin-navy);">Download My Data (CSV)</a>
+  </div>
+
+  <div class="twin-card">
+    <h5 class="text-danger">Delete your account</h5>
+    <p class="text-muted">This permanently deletes your account and all associated health records. This action cannot be undone.</p>
+    <form method="POST" action="{{ url_for('delete_account') }}" onsubmit="return confirm('Are you sure you want to permanently delete your account and all data? This cannot be undone.');">
+      <button type="submit" class="btn btn-danger">Delete My Account</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

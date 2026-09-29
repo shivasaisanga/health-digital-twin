@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Health Digital Twin — Predictive Risk Intelligence{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-7">
+        <p class="section-eyebrow mb-3">◍ Your Digital Health Twin</p>
+        <h1 class="mb-3">See your future health<br>before it happens.</h1>
+        <p class="lead mb-4">A living, AI-driven model of your body that predicts chronic disease risk,
+          explains exactly why, and shows you the single change that would help the most —
+          before symptoms ever appear.</p>
+        <div class="d-flex gap-3">
+          <a href="{{ url_for('register') }}" class="btn btn-twin btn-lg">Build my Digital Twin</a>
+          <a href="{{ url_for('login') }}" class="btn btn-twin-outline btn-lg">Log in</a>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="pulse-ring">
+          <div class="score-inner">
+            <div class="num">82</div>
+            <div class="lbl">Health Score</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="feature-strip">
+  <div class="container">
+    <p class="section-eyebrow mb-2">What your twin does</p>
+    <h2 class="mb-4">Beyond symptom-based checkups</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="icon">◈</div>
+          <h5>Predictive Risk Scores</h5>
+          <p class="text-muted mb-0">ML models estimate your risk of diabetes, hypertension, and heart disease — before symptoms appear.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="icon">⟲</div>
+          <h5>What-If Simulation</h5>
+          <p class="text-muted mb-0">Drag a slider — less sleep, more exercise, lower BMI — and watch your risk update live.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="icon">↟</div>
+          <h5>Habit-Impact Ranking</h5>
+          <p class="text-muted mb-0">Our counterfactual engine tells you exactly which single habit change reduces your risk the most.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="icon">✓</div>
+          <h5>Explainable AI</h5>
+          <p class="text-muted mb-0">Every prediction comes with the top factors behind it — no black-box scores.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="icon">◔</div>
+          <h5>Health Timeline</h5>
+          <p class="text-muted mb-0">Track your score and sub-scores over time to see real progress, not just a snapshot.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="icon">⎘</div>
+          <h5>Doctor-Share Mode</h5>
+          <p class="text-muted mb-0">Export a clean, clinical PDF summary to bring to your next checkup.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
